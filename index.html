@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodologia Lampada.ag — Guia Operacional</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --amber: #F59E0B;
+    --amber-light: #FCD34D;
+    --amber-dark: #B45309;
+    --amber-bg: #FFFBEB;
+    --amber-50: #FFFDE7;
+    --dark: #1C1917;
+    --dark-2: #292524;
+    --gray-800: #292524;
+    --gray-700: #44403C;
+    --gray-600: #57534E;
+    --gray-500: #78716C;
+    --gray-400: #A8A29E;
+    --gray-200: #E7E5E4;
+    --gray-100: #F5F5F4;
+    --white: #FFFFFF;
+    --green: #10B981;
+    --yellow: #F59E0B;
+    --red: #EF4444;
+
+    --p1: #F59E0B;
+    --p2: #3B82F6;
+    --p3: #8B5CF6;
+    --p4: #EC4899;
+    --p5: #10B981;
+    --p6: #F97316;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--dark-2);
+    border-bottom: 1px solid rgba(245,158,11,0.2);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: 68px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--amber), var(--amber-dark));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    box-shadow: 0 0 20px rgba(245,158,11,0.4);
+  }
+
+  .header-title {
+    flex: 1;
+  }
+
+  .header-title h1 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--amber-light);
+    letter-spacing: 0.02em;
+  }
+
+  .header-title p {
+    font-size: 0.7rem;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+  }
+
+  .header-badge {
+    background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.3);
+    color: var(--amber-light);
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* LAYOUT */
+  .app-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - 68px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--dark-2);
+    border-right: 1px solid rgba(255,255,255,0.06);
+    overflow-y: auto;
+    padding: 1.5rem 0;
+  }
+
+  .sidebar-section-label {
+    padding: 0 1.25rem 0.5rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gray-500);
+  }
+
+  .pillar-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.75rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    border-left: 3px solid transparent;
+    position: relative;
+  }
+
+  .pillar-nav-item:hover {
+    background: rgba(255,255,255,0.04);
+  }
+
+  .pillar-nav-item.active {
+    background: rgba(255,255,255,0.06);
+  }
+
+  .pillar-nav-item.active .pillar-num {
+    box-shadow: 0 0 12px currentColor;
+  }
+
+  .pillar-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    color: var(--white);
+  }
+
+  .pillar-nav-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .pillar-nav-text .num-label {
+    font-size: 0.62rem;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .pillar-nav-text .title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gray-200);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+  }
+
+  .pillar-check {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gray-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-size: 0.6rem;
+    cursor: pointer;
+  }
+
+  .pillar-check.done {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.05);
+    margin: 1rem 1.25rem;
+  }
+
+  .progress-bar-wrap {
+    padding: 0 1.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--gray-500);
+    margin-bottom: 0.4rem;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--amber), var(--amber-light));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* MAIN CONTENT */
+  .main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem 2.5rem;
+    background: var(--dark);
+  }
+
+  /* PANELS */
+  .panel {
+    display: none;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .panel.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* HOME PANEL */
+  .home-hero {
+    text-align: center;
+    padding: 3rem 0 2.5rem;
+  }
+
+  .home-hero .lamp-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.25rem;
+    display: block;
+    filter: drop-shadow(0 0 24px rgba(245,158,11,0.5));
+  }
+
+  .home-hero h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--amber-light), var(--amber));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.75rem;
+  }
+
+  .home-hero p {
+    color: var(--gray-400);
+    font-size: 0.95rem;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .pillar-card {
+    background: var(--dark-2);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pillar-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .pillar-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,0.14);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+
+  .pillar-card .num {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .pillar-card h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .pillar-card p {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    line-height: 1.6;
+  }
+
+  .pillar-card .arrow {
+    position: absolute;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    font-size: 0.9rem;
+    opacity: 0.3;
+    transition: all 0.2s;
+  }
+
+  .pillar-card:hover .arrow {
+    opacity: 0.8;
+    transform: translateX(3px);
+  }
+
+  /* PILAR HEADER */
+  .pilar-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: var(--dark-2);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.07);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pilar-header::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; right: 0;
+    width: 200px;
+    background: radial-gradient(ellipse at right, rgba(245,158,11,0.06) 0%, transparent 70%);
+  }
+
+  .pilar-icon-big {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    color: white;
+  }
+
+  .pilar-header-text h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 0.35rem;
+  }
+
+  .pilar-header-text .step-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.6;
+    margin-bottom: 0.75rem;
+  }
+
+  .pilar-header-text .desc {
+    font-size: 0.875rem;
+    color: var(--gray-400);
+    line-height: 1.7;
+    max-width: 580px;
+  }
+
+  .pilar-nav-buttons {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: auto;
+    align-self: flex-end;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .nav-btn {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--gray-400);
+    padding: 0.4rem 0.875rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .nav-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--white);
+  }
+
+  .nav-btn.primary {
+    background: var(--amber);
+    border-color: var(--amber);
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  .nav-btn.primary:hover {
+    background: var(--amber-light);
+  }
+
+  /* SECTIONS */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .content-grid.single {
+    grid-template-columns: 1fr;
+  }
+
+  .content-grid.thirds {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .section-card {
+    background: var(--dark-2);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+
+  .section-card h3 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gray-500);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-card h3 .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+  }
+
+  /* STEPS LIST */
+  .steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.875rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 8px;
+  }
+
+  .step-item:last-child {
+    border-bottom: none;
+  }
+
+  .step-item:hover {
+    background: rgba(255,255,255,0.03);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin: 0 -0.5rem;
+  }
+
+  .step-bullet {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    color: var(--gray-400);
+    margin-top: 1px;
+  }
+
+  .step-content {
+    flex: 1;
+  }
+
+  .step-content .step-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gray-200);
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
+  }
+
+  .step-content .step-desc {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    line-height: 1.6;
+  }
+
+  .step-content .step-sub {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .step-content .step-sub-item {
+    font-size: 0.72rem;
+    color: var(--gray-500);
+    line-height: 1.5;
+    padding-left: 0.875rem;
+    position: relative;
+  }
+
+  .step-content .step-sub-item::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--amber);
+    font-size: 0.6rem;
+    top: 2px;
+  }
+
+  /* RESPONSIBLE TAGS */
+  .responsible-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .responsible-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .role-badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .responsible-item .delivers {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    line-height: 1.55;
+  }
+
+  /* CHECKLIST */
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .check-item:hover {
+    background: rgba(255,255,255,0.04);
+  }
+
+  .check-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    margin-top: 1px;
+    font-size: 0.6rem;
+    color: white;
+  }
+
+  .check-item.checked .check-box {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .check-item .check-text {
+    font-size: 0.78rem;
+    color: var(--gray-300);
+    line-height: 1.5;
+    transition: all 0.2s;
+  }
+
+  .check-item.checked .check-text {
+    color: var(--gray-500);
+    text-decoration: line-through;
+  }
+
+  /* STATUS BADGES */
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .status-badge {
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .status-badge.verde {
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.25);
+  }
+
+  .status-badge.amarelo {
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.25);
+  }
+
+  .status-badge.vermelho {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+  }
+
+  .status-badge .status-icon {
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .status-badge .status-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .status-badge.verde .status-label { color: var(--green); }
+  .status-badge.amarelo .status-label { color: var(--amber); }
+  .status-badge.vermelho .status-label { color: var(--red); }
+
+  .status-badge .status-desc {
+    font-size: 0.72rem;
+    color: var(--gray-500);
+    line-height: 1.45;
+  }
+
+  /* PILLARS COLORS */
+  .p1 { background: linear-gradient(135deg, #F59E0B, #D97706); }
+  .p2 { background: linear-gradient(135deg, #3B82F6, #1D4ED8); }
+  .p3 { background: linear-gradient(135deg, #8B5CF6, #6D28D9); }
+  .p4 { background: linear-gradient(135deg, #EC4899, #9D174D); }
+  .p5 { background: linear-gradient(135deg, #10B981, #065F46); }
+  .p6 { background: linear-gradient(135deg, #F97316, #C2410C); }
+
+  .c1 { color: #F59E0B; }
+  .c2 { color: #3B82F6; }
+  .c3 { color: #8B5CF6; }
+  .c4 { color: #EC4899; }
+  .c5 { color: #10B981; }
+  .c6 { color: #F97316; }
+
+  .b1 { background: rgba(245,158,11,0.12); color: #F59E0B; }
+  .b2 { background: rgba(59,130,246,0.12); color: #60A5FA; }
+  .b3 { background: rgba(139,92,246,0.12); color: #A78BFA; }
+  .b4 { background: rgba(236,72,153,0.12); color: #F472B6; }
+  .b5 { background: rgba(16,185,129,0.12); color: #34D399; }
+  .b6 { background: rgba(249,115,22,0.12); color: #FB923C; }
+
+  .border1 { border-left: 3px solid #F59E0B; }
+  .border2 { border-left: 3px solid #3B82F6; }
+  .border3 { border-left: 3px solid #8B5CF6; }
+  .border4 { border-left: 3px solid #EC4899; }
+  .border5 { border-left: 3px solid #10B981; }
+  .border6 { border-left: 3px solid #F97316; }
+
+  .pc1::before { background: #F59E0B; }
+  .pc2::before { background: #3B82F6; }
+  .pc3::before { background: #8B5CF6; }
+  .pc4::before { background: #EC4899; }
+  .pc5::before { background: #10B981; }
+  .pc6::before { background: #F97316; }
+
+  .active-nav1 { border-left-color: #F59E0B !important; }
+  .active-nav2 { border-left-color: #3B82F6 !important; }
+  .active-nav3 { border-left-color: #8B5CF6 !important; }
+  .active-nav4 { border-left-color: #EC4899 !important; }
+  .active-nav5 { border-left-color: #10B981 !important; }
+  .active-nav6 { border-left-color: #F97316 !important; }
+
+  /* MARK DONE BUTTON */
+  .done-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+
+  .done-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .done-btn.undone {
+    background: rgba(255,255,255,0.07);
+    color: var(--gray-400);
+  }
+
+  .done-btn.undone:hover {
+    background: rgba(16,185,129,0.15);
+    color: var(--green);
+  }
+
+  .done-btn.isdone {
+    background: rgba(16,185,129,0.15);
+    color: var(--green);
+  }
+
+  /* QUOTE BLOCK */
+  .quote-block {
+    background: rgba(245,158,11,0.06);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 10px 10px 0;
+    padding: 1rem 1.25rem;
+    margin-top: 1rem;
+  }
+
+  .quote-block p {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--amber-light);
+    line-height: 1.65;
+  }
+
+  .quote-block cite {
+    font-size: 0.7rem;
+    color: var(--gray-500);
+    display: block;
+    margin-top: 0.5rem;
+  }
+
+  /* FRAMEWORK */
+  .framework-flow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .fw-item {
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: rgba(255,255,255,0.06);
+    color: var(--gray-300);
+  }
+
+  .fw-arrow {
+    color: var(--amber);
+    font-size: 0.8rem;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .pillars-grid { grid-template-columns: 1fr 1fr; }
+    .content-grid { grid-template-columns: 1fr; }
+    .content-grid.thirds { grid-template-columns: 1fr; }
+    .sidebar { width: 220px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-icon">💡</div>
+  <div class="header-title">
+    <h1>Metodologia Lampada.ag</h1>
+    <p>Guia Operacional — Do briefing à entrega</p>
+  </div>
+  <div class="header-badge">30 anos de metodologia</div>
+</header>
+
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-section-label">Início</div>
+    <div class="pillar-nav-item active" id="nav-home" onclick="showPanel('home')">
+      <div class="pillar-num" style="background:rgba(255,255,255,0.08); color:var(--amber)">🏠</div>
+      <div class="pillar-nav-text">
+        <div class="num-label">Visão geral</div>
+        <div class="title">Dashboard</div>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Os 6 Pilares</div>
+
+    <div class="pillar-nav-item" id="nav-p1" onclick="showPanel('p1')">
+      <div class="pillar-num p1">1</div>
+      <div class="pillar-nav-text">
+        <div class="num-label">Pilar 1</div>
+        <div class="title">Planejamento Estratégico</div>
+      </div>
+      <div class="pillar-check" id="check-p1" onclick="toggleCheck(event,'p1')"></div>
+    </div>
+
+    <div class="pillar-nav-item" id="nav-p2" onclick="showPanel('p2')">
+      <div class="pillar-num p2">2</div>
+      <div class="pillar-nav-text">
+        <div class="num-label">Pilar 2</div>
+        <div class="title">Estudo de Verba</div>
+      </div>
+      <div class="pillar-check" id="check-p2" onclick="toggleCheck(event,'p2')"></div>
+    </div>
+
+    <div class="pillar-nav-item" id="nav-p3" onclick="showPanel('p3')">
+      <div class="pillar-num p3">3</div>
+      <div class="pillar-nav-text">
+        <div class="num-label">Pilar 3</div>
+        <div class="title">Operação & Co-criação</div>
+      </div>
+      <div class="pillar-check" id="check-p3" onclick="toggleCheck(event,'p3')"></div>
+    </div>
+
+    <div class="pillar-nav-item" id="nav-p4" onclick="showPanel('p4')">
+      <div class="pillar-num p4">4</div>
+      <div class="pillar-nav-text">
+        <div class="num-label">Pilar 4</div>
+        <div class="title">Criatividade & Pitch</div>
+      </div>
+      <div class="pillar-check" id="check-p4" onclick="toggleCheck(event,'p4')"></div>
+    </div>
+
+    <div class="pillar-nav-item" id="nav-p5" onclick="showPanel('p5')">
+      <div class="pillar-num p5">5</div>
+      <div class="pillar-nav-text">
+        <div class="num-label">Pilar 5</div>
+        <div class="title">Gestão Financeira</div>
+      </div>
+      <div class="pillar-check" id="check-p5" onclick="toggleCheck(event,'p5')"></div>
+    </div>
+
+    <div class="pillar-nav-item" id="nav-p6" onclick="showPanel('p6')">
+      <div class="pillar-num p6">6</div>
+      <div class="pillar-nav-text">
+        <div class="num-label">Pilar 6</div>
+        <div class="title">Perpetuação & Evolução</div>
+      </div>
+      <div class="pillar-check" id="check-p6" onclick="toggleCheck(event,'p6')"></div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-label">
+        <span>Progresso</span>
+        <span id="progress-text">0/6 pilares</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- HOME -->
+    <div class="panel active" id="panel-home">
+      <div class="home-hero">
+        <span class="lamp-icon">💡</span>
+        <h2>Metodologia Lampada.ag</h2>
+        <p>Um método consolidado em mais de 30 anos de prática no live marketing. Cada pilar ilumina a próxima etapa — do briefing à entrega, com estratégia, método e excelência.</p>
+      </div>
+
+      <div class="quote-block" style="margin-bottom:2rem">
+        <p>"O Método Lampada não é uma fórmula. É uma forma de pensar: cada etapa ilumina a próxima."</p>
+        <cite>— Lutti Colautto, Fundador da Lampada.ag</cite>
+      </div>
+
+      <div style="margin-bottom:1rem">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray-500);margin-bottom:0.75rem">Framework Estratégico</div>
+        <div class="framework-flow">
+          <div class="fw-item">TÉCNICA</div><div class="fw-arrow">→</div>
+          <div class="fw-item">ESTRATÉGIA</div><div class="fw-arrow">→</div>
+          <div class="fw-item">EXPERIÊNCIA</div><div class="fw-arrow">→</div>
+          <div class="fw-item">CONVERSÃO</div><div class="fw-arrow">→</div>
+          <div class="fw-item">PROPOSTA DE VALOR</div><div class="fw-arrow">→</div>
+          <div class="fw-item">POSICIONAMENTO</div><div class="fw-arrow">→</div>
+          <div class="fw-item">NICHO</div>
+        </div>
+      </div>
+
+      <div class="pillars-grid">
+        <div class="pillar-card pc1" onclick="showPanel('p1')">
+          <div class="num c1">Pilar 01</div>
+          <h3>Planejamento Estratégico</h3>
+          <p>Onde a luz do projeto começa a nascer. Missão, visão, Matriz de Atratividade e objetivos anuais.</p>
+          <div class="arrow">→</div>
+        </div>
+        <div class="pillar-card pc2" onclick="showPanel('p2')">
+          <div class="num c2">Pilar 02</div>
+          <h3>Estudo de Verba</h3>
+          <p>O filtro que protege a agência. Viabilidade financeira antes de qualquer ideia criativa.</p>
+          <div class="arrow">→</div>
+        </div>
+        <div class="pillar-card pc3" onclick="showPanel('p3')">
+          <div class="num c3">Pilar 03</div>
+          <h3>Operação & Co-criação</h3>
+          <p>Operação e criação integradas desde o início, com cronograma reverso e brainstorm estratégico.</p>
+          <div class="arrow">→</div>
+        </div>
+        <div class="pillar-card pc4" onclick="showPanel('p4')">
+          <div class="num c4">Pilar 04</div>
+          <h3>Criatividade & Pitch</h3>
+          <p>Pesquisa, conceito e apresentação. Criar com método, não com improviso.</p>
+          <div class="arrow">→</div>
+        </div>
+        <div class="pillar-card pc5" onclick="showPanel('p5')">
+          <div class="num c5">Pilar 05</div>
+          <h3>Gestão Financeira</h3>
+          <p>Sem margem, não existe entrega. Controle financeiro do início ao fim do projeto.</p>
+          <div class="arrow">→</div>
+        </div>
+        <div class="pillar-card pc6" onclick="showPanel('p6')">
+          <div class="num c6">Pilar 06</div>
+          <h3>Perpetuação & Evolução</h3>
+          <p>O ciclo nunca termina. Cada projeto retroalimenta o próximo com aprendizado e inovação.</p>
+          <div class="arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILAR 1: PLANEJAMENTO ESTRATÉGICO -->
+    <div class="panel" id="panel-p1">
+      <div class="pilar-header border1">
+        <div class="pilar-icon-big p1">🎯</div>
+        <div class="pilar-header-text" style="flex:1">
+          <div class="step-label c1">Pilar 01 — Antes do briefing</div>
+          <h2>Planejamento Estratégico</h2>
+          <p class="desc">Antes de aceitar qualquer briefing, a agência precisa ter clareza de seus objetivos de negócio, posicionamento e critérios de seleção de projetos. Sem isso, a equipe reage ao mercado em vez de direcioná-lo.</p>
+        </div>
+        <div class="pilar-nav-buttons">
+          <button class="nav-btn primary" onclick="showPanel('p2')">Próximo →</button>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#F59E0B"></span>Passo a Passo</h3>
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(245,158,11,0.15);color:#F59E0B;border-color:rgba(245,158,11,0.3)">1</div>
+              <div class="step-content">
+                <div class="step-title">Reunião anual de planejamento — CEO + Diretores</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Definir 3 objetivos estratégicos do ano</div>
+                  <div class="step-sub-item">Criar a Matriz de Atratividade de Clientes (Go/No Go)</div>
+                  <div class="step-sub-item">Estabelecer ticket mínimo por tipo de projeto</div>
+                  <div class="step-sub-item">Definir calendário de revisão: trimestral com diretores, mensal com equipe</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(245,158,11,0.15);color:#F59E0B;border-color:rgba(245,158,11,0.3)">2</div>
+              <div class="step-content">
+                <div class="step-title">Revisão de Missão, Visão, Valores e Princípios</div>
+                <div class="step-desc">Garantir que toda a equipe conhece e vive o propósito da empresa. Base para todas as decisões.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(245,158,11,0.15);color:#F59E0B;border-color:rgba(245,158,11,0.3)">3</div>
+              <div class="step-content">
+                <div class="step-title">Estruturação do funil comercial</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Ações de inbound e outbound</div>
+                  <div class="step-sub-item">Geração de autoridade (LinkedIn, Instagram)</div>
+                  <div class="step-sub-item">Definição de perfis de clientes ideais</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(245,158,11,0.15);color:#F59E0B;border-color:rgba(245,158,11,0.3)">4</div>
+              <div class="step-content">
+                <div class="step-title">Comunicação para toda a equipe</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Apresentar objetivos do ano em reunião geral</div>
+                  <div class="step-sub-item">Fixar a Matriz de Atratividade em local visível</div>
+                  <div class="step-sub-item">Treinar atendimento para usar a Matriz antes de aceitar briefings</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.25rem">
+          <div class="section-card">
+            <h3><span class="dot" style="background:#F59E0B"></span>Quem faz & o que entrega</h3>
+            <div class="responsible-list">
+              <div class="responsible-item">
+                <div class="role-badge b1">CEO</div>
+                <div class="delivers">Define objetivos estratégicos, lidera planejamento anual e aprova Matriz de Atratividade</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b1">Diretores</div>
+                <div class="delivers">Contribuem com análise de mercado, metas por área e revisões trimestrais</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b1">Atendimento</div>
+                <div class="delivers">Aplica a Matriz antes de aceitar qualquer briefing. Primeiro filtro da agência</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h3><span class="dot" style="background:#F59E0B"></span>Ferramenta essencial</h3>
+            <div style="padding:1rem;background:rgba(245,158,11,0.08);border-radius:10px;border:1px solid rgba(245,158,11,0.2)">
+              <div style="font-size:0.8rem;font-weight:700;color:#F59E0B;margin-bottom:0.4rem">📊 Matriz de Atratividade (Go / No Go)</div>
+              <div style="font-size:0.75rem;color:var(--gray-400);line-height:1.6">Tabela que avalia cada projeto com base em critérios estratégicos, gerando uma nota para decidir se avança ou não. Evita desperdício de tempo e energia com projetos desalinhados.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid single">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#F59E0B"></span>Checklist de conclusão</h3>
+          <div class="checklist" id="cl-p1">
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Objetivos estratégicos do ano definidos (mínimo 3)</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Missão, Visão e Valores revisados e documentados</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Matriz de Atratividade criada e validada pelo CEO</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Ticket mínimo por tipo de projeto definido</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Perfis de clientes ideais documentados</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Calendário de revisão (trimestral/mensal) estabelecido</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Equipe treinada e comunicada sobre os objetivos do ano</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="done-section">
+        <button class="done-btn undone" id="done-p1" onclick="markDone('p1')">✓ Marcar pilar como concluído</button>
+      </div>
+    </div>
+
+    <!-- PILAR 2: ESTUDO DE VERBA -->
+    <div class="panel" id="panel-p2">
+      <div class="pilar-header border2">
+        <div class="pilar-icon-big p2">💰</div>
+        <div class="pilar-header-text" style="flex:1">
+          <div class="step-label c2">Pilar 02 — Ao receber o briefing</div>
+          <h2>Estudo de Verba</h2>
+          <p class="desc">Toda vez que um briefing entra, antes de qualquer ideia criativa, o atendimento e a operação fazem um estudo de viabilidade financeira. O objetivo é simples: só criamos o que podemos entregar com excelência.</p>
+        </div>
+        <div class="pilar-nav-buttons">
+          <button class="nav-btn" onclick="showPanel('p1')">← Anterior</button>
+          <button class="nav-btn primary" onclick="showPanel('p3')">Próximo →</button>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#3B82F6"></span>Passo a Passo</h3>
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(59,130,246,0.15);color:#3B82F6;border-color:rgba(59,130,246,0.3)">1</div>
+              <div class="step-content">
+                <div class="step-title">Recebimento do briefing — Atendimento (D+0)</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Preencher Ficha de Briefing: cliente, verba total, tipo de projeto, prazo</div>
+                  <div class="step-sub-item">Aplicar a Matriz de Atratividade: este projeto está dentro dos critérios?</div>
+                  <div class="step-sub-item">Se fora dos critérios: escalar ao CEO antes de seguir</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(59,130,246,0.15);color:#3B82F6;border-color:rgba(59,130,246,0.3)">2</div>
+              <div class="step-content">
+                <div class="step-title">Análise de viabilidade — Operação + Financeiro (D+1)</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Estimar custos de produção, logística e parceiros-chave</div>
+                  <div class="step-sub-item">Calcular margem mínima esperada (abaixo de X% = inviável)</div>
+                  <div class="step-sub-item">Avaliar parceiros disponíveis: fornecedores aptos no prazo?</div>
+                  <div class="step-sub-item">Gerar Parecer de Viabilidade: VERDE / AMARELO / VERMELHO</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(59,130,246,0.15);color:#3B82F6;border-color:rgba(59,130,246,0.3)">3</div>
+              <div class="step-content">
+                <div class="step-title">Decisão — CEO (D+1 ou D+2)</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">CEO analisa Ficha + Parecer e decide a ação</div>
+                  <div class="step-sub-item">Se AVANÇAR: brief entra na fila de criação com data definida</div>
+                  <div class="step-sub-item">Se DECLINAR: atendimento comunica o cliente com clareza e respeito</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(59,130,246,0.15);color:#3B82F6;border-color:rgba(59,130,246,0.3)">4</div>
+              <div class="step-content">
+                <div class="step-title">Mapa da Concorrência e critérios éticos</div>
+                <div class="step-desc">Avaliar não só o cliente, mas os demais players. Verificar se as práticas de concorrência estão alinhadas com os valores da agência.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.25rem">
+          <div class="section-card">
+            <h3><span class="dot" style="background:#3B82F6"></span>Os 3 Filtros da Verba</h3>
+            <div class="responsible-list">
+              <div class="responsible-item">
+                <div class="role-badge b2">Filtro 1</div>
+                <div class="delivers"><strong style="color:var(--gray-200)">Matriz de Atratividade</strong> — alinhamento com a estratégia de negócio</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b2">Filtro 2</div>
+                <div class="delivers"><strong style="color:var(--gray-200)">Funil Go/No-Go</strong> — análise de oportunidade, mercado e concorrência</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b2">Filtro 3</div>
+                <div class="delivers"><strong style="color:var(--gray-200)">Estudo de Verba</strong> — diagnóstico de viabilidade real financeira e operacional</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h3><span class="dot" style="background:#3B82F6"></span>Os 3 Cenários do Parecer</h3>
+            <div class="status-grid">
+              <div class="status-badge verde">
+                <span class="status-icon">🟢</span>
+                <span class="status-label">Verde</span>
+                <div class="status-desc">Cliente alinhado. Avançar com segurança e clareza.</div>
+              </div>
+              <div class="status-badge amarelo">
+                <span class="status-icon">🟡</span>
+                <span class="status-label">Amarelo</span>
+                <div class="status-desc">Ajustes necessários. Negociar, apresentar dados e buscar soluções viáveis.</div>
+              </div>
+              <div class="status-badge vermelho">
+                <span class="status-icon">🔴</span>
+                <span class="status-label">Vermelho</span>
+                <div class="status-desc">Projeto inviável. Declinar com respeito e transparência.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid single">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#3B82F6"></span>Checklist de conclusão</h3>
+          <div class="checklist" id="cl-p2">
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Ficha de Briefing preenchida completamente</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Matriz de Atratividade aplicada ao projeto</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Estimativa de custos de produção e logística realizada</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Margem mínima calculada e analisada</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Disponibilidade de fornecedores verificada</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Parecer de Viabilidade emitido (Verde/Amarelo/Vermelho)</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">CEO tomou decisão de avançar ou declinar</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="done-section">
+        <button class="done-btn undone" id="done-p2" onclick="markDone('p2')">✓ Marcar pilar como concluído</button>
+      </div>
+    </div>
+
+    <!-- PILAR 3: OPERAÇÃO & CO-CRIAÇÃO -->
+    <div class="panel" id="panel-p3">
+      <div class="pilar-header border3">
+        <div class="pilar-icon-big p3">⚙️</div>
+        <div class="pilar-header-text" style="flex:1">
+          <div class="step-label c3">Pilar 03 — Após aprovação do projeto</div>
+          <h2>Planejamento Operacional & Co-criação</h2>
+          <p class="desc">Confirmada a participação, operação e criação se integram imediatamente. Um cronograma reverso é construído a partir da data de entrega para garantir que todos saibam exatamente o que precisa estar pronto e quando.</p>
+        </div>
+        <div class="pilar-nav-buttons">
+          <button class="nav-btn" onclick="showPanel('p2')">← Anterior</button>
+          <button class="nav-btn primary" onclick="showPanel('p4')">Próximo →</button>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#8B5CF6"></span>Passo a Passo</h3>
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(139,92,246,0.15);color:#8B5CF6;border-color:rgba(139,92,246,0.3)">1</div>
+              <div class="step-content">
+                <div class="step-title">Kickoff do projeto — Atendimento + Operação + Criação</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Reunião de kickoff: máximo 60 minutos, todos os líderes presentes</div>
+                  <div class="step-sub-item">Definir datas-chave: entrega, aprovações, ensaios</div>
+                  <div class="step-sub-item">Distribuir responsabilidades por área</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(139,92,246,0.15);color:#8B5CF6;border-color:rgba(139,92,246,0.3)">2</div>
+              <div class="step-content">
+                <div class="step-title">Cronograma Reverso</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Construído a partir da data de entrega para trás</div>
+                  <div class="step-sub-item">Define prazo viável, etapas necessárias e tempo por área</div>
+                  <div class="step-sub-item">Identifica momentos de decisão e aprovação antecipadamente</div>
+                  <div class="step-sub-item">Antecipa gargalos e fortalece previsibilidade</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(139,92,246,0.15);color:#8B5CF6;border-color:rgba(139,92,246,0.3)">3</div>
+              <div class="step-content">
+                <div class="step-title">Envolvimento Multidisciplinar</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Direção de Criação</div>
+                  <div class="step-sub-item">Arquitetura e Cenografia</div>
+                  <div class="step-sub-item">Direção Técnica</div>
+                  <div class="step-sub-item">Pré-produção (orçamentos e viabilidade técnica)</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(139,92,246,0.15);color:#8B5CF6;border-color:rgba(139,92,246,0.3)">4</div>
+              <div class="step-content">
+                <div class="step-title">Brainstorm Estratégico</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Perfis de fornecedores desejados</div>
+                  <div class="step-sub-item">Referências criativas e conceituais</div>
+                  <div class="step-sub-item">Conteúdo e interatividade da experiência</div>
+                  <div class="step-sub-item">Perfis dos públicos-alvo e mapa de contatos</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.25rem">
+          <div class="section-card">
+            <h3><span class="dot" style="background:#8B5CF6"></span>Quem faz & o que entrega</h3>
+            <div class="responsible-list">
+              <div class="responsible-item">
+                <div class="role-badge b3">Atendimento</div>
+                <div class="delivers">Organiza kickoff, mantém comunicação com cliente e controla prazos</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b3">Operação</div>
+                <div class="delivers">Constrói cronograma reverso, mapeia fornecedores e coordena áreas técnicas</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b3">Criação</div>
+                <div class="delivers">Lidera brainstorm, define referências e desenvolve conceito alinhado à viabilidade</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b3">Pré-produção</div>
+                <div class="delivers">Valida orçamentos com fornecedores e garante viabilidade técnica das ideias</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="quote-block">
+            <p>"Quanto mais bem estruturado é o início do processo, maior é a liberdade e a qualidade da entrega final."</p>
+            <cite>— Lutti Colautto</cite>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid single">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#8B5CF6"></span>Checklist de conclusão</h3>
+          <div class="checklist" id="cl-p3">
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Kickoff realizado com todos os líderes de área</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Cronograma reverso construído e compartilhado com toda a equipe</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Responsabilidades distribuídas por área claramente</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Brainstorm estratégico realizado com equipe multidisciplinar</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Perfis de fornecedores definidos</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Público-alvo mapeado com canais de comunicação</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Referências criativas e conceituais coletadas</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="done-section">
+        <button class="done-btn undone" id="done-p3" onclick="markDone('p3')">✓ Marcar pilar como concluído</button>
+      </div>
+    </div>
+
+    <!-- PILAR 4: CRIATIVIDADE & PITCH -->
+    <div class="panel" id="panel-p4">
+      <div class="pilar-header border4">
+        <div class="pilar-icon-big p4">✨</div>
+        <div class="pilar-header-text" style="flex:1">
+          <div class="step-label c4">Pilar 04 — Desenvolvimento da proposta</div>
+          <h2>Processo Criativo & Pitch</h2>
+          <p class="desc">Desenvolver uma proposta para concorrência não é exercício de improviso. É uma operação complexa que exige repertório, pesquisa profunda, planejamento e investimento real de tempo e estrutura.</p>
+        </div>
+        <div class="pilar-nav-buttons">
+          <button class="nav-btn" onclick="showPanel('p3')">← Anterior</button>
+          <button class="nav-btn primary" onclick="showPanel('p5')">Próximo →</button>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#EC4899"></span>As 4 Premissas do Processo Criativo</h3>
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(236,72,153,0.15);color:#EC4899;border-color:rgba(236,72,153,0.3)">1</div>
+              <div class="step-content">
+                <div class="step-title">Pesquisa Estratégica</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Investigar projetos anteriores — nossos e do mercado</div>
+                  <div class="step-sub-item">Estudar cases similares e absorver aprendizados do setor</div>
+                  <div class="step-sub-item">Buscar referências internacionais: feiras, festivais, eventos no exterior</div>
+                  <div class="step-sub-item">Captar tendências e ampliar o olhar sobre formatos e experiências</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(236,72,153,0.15);color:#EC4899;border-color:rgba(236,72,153,0.3)">2</div>
+              <div class="step-content">
+                <div class="step-title">Contextualização Criativa</div>
+                <div class="step-desc">Criar é resolver — com inteligência, respeito ao público e conexão real com os objetivos do cliente. Entregar uma visão estratégica com argumentos sólidos e demonstração de viabilidade técnica.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(236,72,153,0.15);color:#EC4899;border-color:rgba(236,72,153,0.3)">3</div>
+              <div class="step-content">
+                <div class="step-title">Custo Invisível da Concorrência</div>
+                <div class="step-desc">Toda concorrência consome tempo, energia e estrutura. Participar só quando fizer sentido comercial, estratégico e cultural para a agência.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(236,72,153,0.15);color:#EC4899;border-color:rgba(236,72,153,0.3)">4</div>
+              <div class="step-content">
+                <div class="step-title">Criação com Propósito</div>
+                <div class="step-desc">Não criamos por criar — criamos para transformar. Cada proposta deve responder: qual transformação real este projeto vai gerar para o cliente e o público?</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.25rem">
+          <div class="section-card">
+            <h3><span class="dot" style="background:#EC4899"></span>Estrutura da Apresentação</h3>
+            <div class="responsible-list">
+              <div class="responsible-item">
+                <div class="role-badge b4">Abertura</div>
+                <div class="delivers">Contextualização do mercado, do cliente e do desafio estratégico</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b4">Conceito</div>
+                <div class="delivers">Ideia central com narrativa, storytelling e identidade visual integrados</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b4">Solução</div>
+                <div class="delivers">Detalhamento técnico, operacional e de experiência do projeto</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b4">Amplificação</div>
+                <div class="delivers">Estratégias de divulgação, redes sociais e mensuração de resultados</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b4">Viabilidade</div>
+                <div class="delivers">Orçamento detalhado, cronograma e garantias de entrega</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="quote-block">
+            <p>"Não vendemos apostas. Propomos soluções. A apresentação é construída para ser dinâmica, estratégica e impactante, mas sempre com os pés no chão."</p>
+            <cite>— Lutti Colautto</cite>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid single">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#EC4899"></span>Checklist de conclusão</h3>
+          <div class="checklist" id="cl-p4">
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Pesquisa de cases nacionais e internacionais realizada</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Conceito criativo desenvolvido e alinhado com a viabilidade</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Identidade visual da proposta criada</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Storytelling e narrativa da apresentação construídos</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Estratégias de amplificação e divulgação incluídas</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Orçamento e cronograma integrados à proposta</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Apresentação revisada e aprovada internamente antes de enviar ao cliente</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="done-section">
+        <button class="done-btn undone" id="done-p4" onclick="markDone('p4')">✓ Marcar pilar como concluído</button>
+      </div>
+    </div>
+
+    <!-- PILAR 5: GESTÃO FINANCEIRA -->
+    <div class="panel" id="panel-p5">
+      <div class="pilar-header border5">
+        <div class="pilar-icon-big p5">📊</div>
+        <div class="pilar-header-text" style="flex:1">
+          <div class="step-label c5">Pilar 05 — Durante a execução</div>
+          <h2>Gestão Financeira do Projeto</h2>
+          <p class="desc">Sem gestão, não há entrega. Ideia boa sem saúde financeira é dívida disfarçada de portfólio. A gestão financeira garante que o projeto seja sustentável do início ao fim, com margem real e visão de resultado.</p>
+        </div>
+        <div class="pilar-nav-buttons">
+          <button class="nav-btn" onclick="showPanel('p4')">← Anterior</button>
+          <button class="nav-btn primary" onclick="showPanel('p6')">Próximo →</button>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#10B981"></span>As 3 Frentes da Gestão Financeira</h3>
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(16,185,129,0.15);color:#10B981;border-color:rgba(16,185,129,0.3)">1</div>
+              <div class="step-content">
+                <div class="step-title">Análise de Fornecedores</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Credibilidade e histórico de mercado</div>
+                  <div class="step-sub-item">Capacidade de entrega dentro do prazo</div>
+                  <div class="step-sub-item">Saúde financeira do parceiro</div>
+                  <div class="step-sub-item">Condições comerciais negociáveis</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(16,185,129,0.15);color:#10B981;border-color:rgba(16,185,129,0.3)">2</div>
+              <div class="step-content">
+                <div class="step-title">Modelo de Negociação com o Cliente</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Política de negociação clara e documentada</div>
+                  <div class="step-sub-item">Termos de pagamento viáveis ao fluxo de caixa</div>
+                  <div class="step-sub-item">Mecanismos de proteção contra riscos financeiros</div>
+                  <div class="step-sub-item">Garantia de recursos para execução antes do início</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(16,185,129,0.15);color:#10B981;border-color:rgba(16,185,129,0.3)">3</div>
+              <div class="step-content">
+                <div class="step-title">Margem e Perspectiva de Resultado</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Definição de target financeiro por projeto</div>
+                  <div class="step-sub-item">Simulações de diferentes cenários (otimista, base, pessimista)</div>
+                  <div class="step-sub-item">Proteção contra zonas de risco (margem mínima de 15%)</div>
+                  <div class="step-sub-item">Acompanhamento semanal de execução orçamentária</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.25rem">
+          <div class="section-card">
+            <h3><span class="dot" style="background:#10B981"></span>Controles durante o projeto</h3>
+            <div class="responsible-list">
+              <div class="responsible-item">
+                <div class="role-badge b5">Diário</div>
+                <div class="delivers">Acompanhar gastos realizados vs. orçado. Identificar desvios imediatamente.</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b5">Semanal</div>
+                <div class="delivers">Reunião financeira com operação: revisar forecast e ajustar plano se necessário.</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b5">Pós-evento</div>
+                <div class="delivers">Fechamento financeiro completo: real vs. orçado, análise de margem e lições aprendidas.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:1rem;background:rgba(239,68,68,0.08);border-radius:10px;border:1px solid rgba(239,68,68,0.2)">
+            <div style="font-size:0.8rem;font-weight:700;color:#EF4444;margin-bottom:0.4rem">⚠️ Alerta de Risco</div>
+            <div style="font-size:0.75rem;color:var(--gray-400);line-height:1.6">Se a margem cair abaixo de 15%, acionar imediatamente o CEO e o diretor financeiro para decisão. Nunca executar projeto no vermelho sem autorização formal.</div>
+          </div>
+
+          <div class="quote-block">
+            <p>"Sem margem, sem gestão e sem visão, o show nem deveria começar."</p>
+            <cite>— Lutti Colautto</cite>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid single">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#10B981"></span>Checklist de conclusão</h3>
+          <div class="checklist" id="cl-p5">
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Fornecedores avaliados (credibilidade, capacidade, condições)</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Contratos e condições de pagamento formalizados</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Target financeiro definido e simulações realizadas</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Margem mínima de 15% garantida no orçamento</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Acompanhamento orçamentário semanal estruturado</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Fechamento financeiro pós-projeto realizado</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Resultado financeiro reportado para o CEO</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="done-section">
+        <button class="done-btn undone" id="done-p5" onclick="markDone('p5')">✓ Marcar pilar como concluído</button>
+      </div>
+    </div>
+
+    <!-- PILAR 6: PERPETUAÇÃO & EVOLUÇÃO -->
+    <div class="panel" id="panel-p6">
+      <div class="pilar-header border6">
+        <div class="pilar-icon-big p6">🔄</div>
+        <div class="pilar-header-text" style="flex:1">
+          <div class="step-label c6">Pilar 06 — Após a entrega</div>
+          <h2>Perpetuação & Evolução</h2>
+          <p class="desc">O ciclo nunca termina. Cada projeto retroalimenta o próximo — transformando experiência em aprendizado e aprendizado em inovação. A busca constante por evolução, como empresa e como profissional.</p>
+        </div>
+        <div class="pilar-nav-buttons">
+          <button class="nav-btn" onclick="showPanel('p5')">← Anterior</button>
+          <button class="nav-btn primary" onclick="showPanel('home')">🏠 Início</button>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#F97316"></span>Passo a Passo — Pós-Projeto</h3>
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(249,115,22,0.15);color:#F97316;border-color:rgba(249,115,22,0.3)">1</div>
+              <div class="step-content">
+                <div class="step-title">Relatório de Aprendizados (D+3 após entrega)</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">O que funcionou excepcionalmente bem</div>
+                  <div class="step-sub-item">O que poderia ter sido melhor</div>
+                  <div class="step-sub-item">Fornecedores que se destacaram (positiva ou negativamente)</div>
+                  <div class="step-sub-item">Lições que mudariam a próxima proposta semelhante</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(249,115,22,0.15);color:#F97316;border-color:rgba(249,115,22,0.3)">2</div>
+              <div class="step-content">
+                <div class="step-title">Mensuração de Resultados</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Resultados reais vs. KPIs prometidos ao cliente</div>
+                  <div class="step-sub-item">NPS e satisfação do cliente (pesquisa pós-evento)</div>
+                  <div class="step-sub-item">Impacto gerado no público-alvo</div>
+                  <div class="step-sub-item">ROI para o cliente e para a agência</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(249,115,22,0.15);color:#F97316;border-color:rgba(249,115,22,0.3)">3</div>
+              <div class="step-content">
+                <div class="step-title">Biblioteca de Aprendizados</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Documentar o case completo na biblioteca interna</div>
+                  <div class="step-sub-item">Categorizar por tipo de projeto, cliente e resultado</div>
+                  <div class="step-sub-item">Registrar templates, checklists e processos refinados</div>
+                </div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-bullet" style="background:rgba(249,115,22,0.15);color:#F97316;border-color:rgba(249,115,22,0.3)">4</div>
+              <div class="step-content">
+                <div class="step-title">Busca por Novos Modelos de Negócio</div>
+                <div class="step-sub">
+                  <div class="step-sub-item">Participação em eventos internacionais e feiras do setor</div>
+                  <div class="step-sub-item">Investimento em consultorias e novos mercados</div>
+                  <div class="step-sub-item">Escuta ativa dos movimentos globais</div>
+                  <div class="step-sub-item">Desenvolvimento de produtos e serviços complementares</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.25rem">
+          <div class="section-card">
+            <h3><span class="dot" style="background:#F97316"></span>Quem faz & o que entrega</h3>
+            <div class="responsible-list">
+              <div class="responsible-item">
+                <div class="role-badge b6">CEO + Equipe</div>
+                <div class="delivers">Lidera reunião pós-projeto e define quais aprendizados entram na metodologia oficial</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b6">Atendimento</div>
+                <div class="delivers">Coleta feedback do cliente, aplica NPS e documenta satisfação e resultados</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b6">Operação</div>
+                <div class="delivers">Produz relatório técnico e operacional, documenta fornecedores para próximos projetos</div>
+              </div>
+              <div class="responsible-item">
+                <div class="role-badge b6">Financeiro</div>
+                <div class="delivers">Fecha relatório financeiro final e apresenta análise de margem real vs. projetada</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:1rem;background:rgba(249,115,22,0.08);border-radius:10px;border:1px solid rgba(249,115,22,0.2)">
+            <div style="font-size:0.8rem;font-weight:700;color:#F97316;margin-bottom:0.4rem">💡 Expansão do Método</div>
+            <div style="font-size:0.75rem;color:var(--gray-400);line-height:1.6">A Metodologia Lampada está sendo transformada em curso online, livro e plataforma de consultoria — para que 30 anos de aprendizado possam ser replicados e deixem um legado para o mercado de live marketing.</div>
+          </div>
+
+          <div class="quote-block">
+            <p>"Todo evento é um novo começo, todo projeto é um novo teste e todo negócio precisa de evolução constante para não ser engolido pelo próprio sucesso."</p>
+            <cite>— Lutti Colautto</cite>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid single">
+        <div class="section-card">
+          <h3><span class="dot" style="background:#F97316"></span>Checklist de conclusão</h3>
+          <div class="checklist" id="cl-p6">
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Reunião pós-projeto realizada com toda a equipe</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Relatório de aprendizados documentado</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Feedback e NPS do cliente coletados</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Resultados reais vs. KPIs prometidos avaliados</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Case documentado na biblioteca interna</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Fornecedores avaliados e lista atualizada</div></div>
+            <div class="check-item" onclick="toggleCheckItem(this)"><div class="check-box"></div><div class="check-text">Aprendizados incorporados à metodologia para os próximos projetos</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="done-section">
+        <button class="done-btn undone" id="done-p6" onclick="markDone('p6')">✓ Marcar pilar como concluído</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const done = {};
+
+  function showPanel(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.pillar-nav-item').forEach(n => {
+      n.classList.remove('active');
+      n.style.borderLeftColor = 'transparent';
+    });
+
+    document.getElementById('panel-' + id).classList.add('active');
+    const navEl = document.getElementById('nav-' + id);
+    if (navEl) {
+      navEl.classList.add('active');
+      const colors = { p1:'#F59E0B', p2:'#3B82F6', p3:'#8B5CF6', p4:'#EC4899', p5:'#10B981', p6:'#F97316', home:'#F59E0B' };
+      navEl.style.borderLeftColor = colors[id] || 'var(--amber)';
+    }
+
+    window.scrollTo(0, 0);
+    document.querySelector('.main-content').scrollTop = 0;
+  }
+
+  function toggleCheckItem(el) {
+    el.classList.toggle('checked');
+    if (el.classList.contains('checked')) {
+      el.querySelector('.check-box').innerHTML = '✓';
+    } else {
+      el.querySelector('.check-box').innerHTML = '';
+    }
+  }
+
+  function toggleCheck(event, id) {
+    event.stopPropagation();
+    const el = document.getElementById('check-' + id);
+    el.classList.toggle('done');
+    if (el.classList.contains('done')) {
+      el.innerHTML = '✓';
+      done[id] = true;
+    } else {
+      el.innerHTML = '';
+      done[id] = false;
+      // also reset done btn
+      const btn = document.getElementById('done-' + id);
+      if (btn) {
+        btn.className = 'done-btn undone';
+        btn.textContent = '✓ Marcar pilar como concluído';
+      }
+    }
+    updateProgress();
+  }
+
+  function markDone(id) {
+    done[id] = !done[id];
+    const btn = document.getElementById('done-' + id);
+    const check = document.getElementById('check-' + id);
+
+    if (done[id]) {
+      btn.className = 'done-btn isdone';
+      btn.textContent = '✓ Pilar concluído!';
+      if (check) { check.classList.add('done'); check.innerHTML = '✓'; }
+    } else {
+      btn.className = 'done-btn undone';
+      btn.textContent = '✓ Marcar pilar como concluído';
+      if (check) { check.classList.remove('done'); check.innerHTML = ''; }
+    }
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const count = Object.values(done).filter(Boolean).length;
+    document.getElementById('progress-text').textContent = count + '/6 pilares';
+    document.getElementById('progress-fill').style.width = (count / 6 * 100) + '%';
+  }
+
+  // Init
+  showPanel('home');
+</script>
+
+</body>
+</html>
